@@ -3,9 +3,11 @@ buildscript {
 
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.15"
     }
 }
 
@@ -13,20 +15,21 @@ group 'com.github.plugkit'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'kotlin'
+apply plugin: 'maven'
 
 repositories {
     mavenCentral()
     jcenter()
     maven {
-        url 'http://repo.bastian-oppermann.de'
+        url 'http://repo.onarandombox.com/content/groups/public/'
     }
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile 'io.github.microutils:kotlin-logging:1.4.6'
-    compile 'org.slf4j:slf4j-api:1.7.21'
+    compile 'com.dumptruckman.dtmlibs:logging:1.0-SNAPSHOT'
+    compile 'io.github.config4k:config4k:0.3.0'
 }
 
 compileKotlin {
@@ -34,4 +37,29 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier 'sources'
+    from sourceSets.main.allSource
+    //from "${project.rootDir}/LICENSE.txt"
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+if (project.hasProperty('mavenUser') && project.hasProperty('mavenPassword')) {
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: "http://repo.onarandombox.com/content/repositories/thirdparty/") {
+                    authentication(userName: mavenUser, password: mavenPassword)
+                }
+                snapshotRepository(url: "http://repo.onarandombox.com/content/repositories/thirdparty-dev/") {
+                    authentication(userName: mavenUser, password: mavenPassword)
+                }
+            }
+        }
+    }
 }

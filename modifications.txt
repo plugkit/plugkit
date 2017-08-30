@@ -1,0 +1,6 @@
+This project modifies files taken from Bukkit. The initial commit
+includes files related only to the plugin and event system of
+Bukkit. They have been converted to Kotlin and pared down for use
+within Plugkit. Further modifications will be tracked via git.
+
+https://github.com/plugkit/plugkit

@@ -67,7 +67,7 @@ abstract class JavaPlugin<H : PluginHost> : Plugin<H> {
         this.host = host
         this.pluginLoader = loader
         this.description = description
-        Logging.registerLogOwner(this::class.java, this.description.name)
+        Logging.registerLogOwnerName(this::class.java, this.description.name)
         this.logger = Logging.getLogger(this)
     }
 }
